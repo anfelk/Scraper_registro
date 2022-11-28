@@ -12,8 +12,7 @@ from bs4 import BeautifulSoup
 
 def func_emp(url, registro):
     # Downloading contents of the web page
-    #url = "https://registrosanitario.ispch.gob.cl/Ficha.aspx?RegistroISP=F-25855/20"
-    #url = "https://registrosanitario.ispch.gob.cl/Ficha.aspx?RegistroISP=F-21166/19"
+
     data = requests.get(url).text
 
     # Creating BeautifulSoup object
@@ -22,8 +21,7 @@ def func_emp(url, registro):
         'table', id='ctl00_ContentPlaceHolder1_gvFuncionEmpresas')
 
     # Defining of the dataframe
-    ent_function = pd.DataFrame(
-        columns=['Registro', 'Función Empresa', 'Razón Social', 'País'])
+    ent_function = pd.DataFrame()
 
     # Collecting Ddata
     for row in table.find_all('tr'):
@@ -32,11 +30,15 @@ def func_emp(url, registro):
 
         if (columns != []):
             funcion = columns[0].text.strip()
-            razon = columns[1].text.strip()
-            pais = columns[2].text.strip()
-
-            ent_function = ent_function.append(
-                {'Registro': registro, 'Función Empresa': funcion,  'Razón Social': razon, 'País': pais}, ignore_index=True)
+            if funcion == "Sin Funciones de Empresa":
+                ent_function = ent_function.append(
+                    {'Registro': registro, 'Función Empresa': "Sin Funciones de Empresa", 'Razón Social': "", 'País': ""}, ignore_index=True)
+                exit
+            else:
+                razon = columns[1].text.strip()
+                pais = columns[2].text.strip()
+                ent_function = ent_function.append(
+                    {'Registro': registro, 'Función Empresa': funcion, 'Razón Social': razon, 'País': pais}, ignore_index=True)
 
     return ent_function
 
@@ -44,8 +46,9 @@ def func_emp(url, registro):
 def run():
 
     Funcion = func_emp(
-        "https://registrosanitario.ispch.gob.cl/Ficha.aspx?RegistroISP=F-25855/20", 'F-25855/20')
-    print(Funcion)
+        "https://registrosanitario.ispch.gob.cl/Ficha.aspx?RegistroISP=H-1062/21", 'H-1062/21')
+
+    Funcion.to_csv('outfile/funciontest.csv', encoding='utf-8', index=False)
 
 
 if __name__ == '__main__':

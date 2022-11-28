@@ -2,9 +2,8 @@
 import pandas as pd
 
 
-def get_links():
-    TextFileReader = pd.read_csv(
-        'src/Productos-Directa.csv', sep=';', chunksize=50000)
+def get_links(archivo):
+    TextFileReader = pd.read_csv(archivo, sep=';', chunksize=50000)
     dfList = []
     for df in TextFileReader:
         dfList.append(df)

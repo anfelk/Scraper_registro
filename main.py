@@ -8,6 +8,7 @@ URL_root = "https://registrosanitario.ispch.gob.cl/Ficha.aspx?RegistroISP="
 Directa = 'src/ProductosDirecta.csv'
 RecetaCheque = 'src/ProductosRecetaCheque.csv'
 RecetaMedica = 'src/ProductosRecetaMedica.csv'
+RecetaSimple = 'src/ProductosRecetaSimple.csv'
 
 
 def cond_venta(tipo_venta):
@@ -17,6 +18,8 @@ def cond_venta(tipo_venta):
         archivo = RecetaCheque
     elif tipo_venta == "RecetaMedica":
         archivo = RecetaMedica
+    elif tipo_venta == "RecetaSimple":
+        archivo = RecetaSimple
     else:
         print('Opcion invalida')
         exit
